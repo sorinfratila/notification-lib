@@ -1,0 +1,23 @@
+<div class="notification__container">
+  <div
+    class="notification__item"
+    *ngIf="overflow$ | async"
+    [ngClass]="checkForColor() ? 'notification__item__warning' : 'notification__item__info'">
+    <div class="notification__item__content">
+      <img src="../../assets/icons/alert.svg" alt="">
+<!--      <svg class="notification__item__icon">-->
+<!--        <use xlink:href="assets/icons/symbol-defs.svg#icon-alert"></use>-->
+<!--      </svg>-->
+      <p class="notification__item__message">You have {{ this.grouppedNotifications.size }} unread notifications</p>
+      <button class="button notification__item__btn">
+        <span class="btn__text">Show all</span>
+      </button>
+    </div>
+  </div>
+  <lib-notif
+    *ngFor="let notification of notifications; let i = index"
+    (onClose)="onMessageClose($event)"
+    [notification]="notification"
+    [index]="i"
+  ></lib-notif>
+</div>

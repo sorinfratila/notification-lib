@@ -6,5 +6,18 @@
 */
 {
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./dist/ngx-notif/tsconfig.lib.json"
+    },
+    {
+      "path": "./dist/ngx-notif/tsconfig.spec.json"
+    },
+    {
+      "path": "./dist/ngx-notif-showcase/tsconfig.app.json"
+    },
+    {
+      "path": "./dist/ngx-notif-showcase/tsconfig.spec.json"
+    }
+]
 }

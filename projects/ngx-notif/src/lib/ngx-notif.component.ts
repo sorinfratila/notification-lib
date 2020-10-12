@@ -40,7 +40,7 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() notification: INotif;
   @Input() index: number;
 
-  @Output() onClose: EventEmitter<any> = new EventEmitter();
+  @Output() closeNotif: EventEmitter<any> = new EventEmitter();
 
   timeout: any;
   relativeTime: string; // used to keep time of unconfirmed notifications
@@ -76,7 +76,7 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.notification.confirmed) {
       this.timeout = setTimeout(() => {
         // console.warn('timeout passed');
-        this.onClose.emit({
+        this.closeNotif.emit({
           index: this.index,
           notification: this.notification,
           timedOut: true,
@@ -100,7 +100,7 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   onOKClick(event: any): void {
     this.notifService.removeGroupedNotification(this.notification.id);
-    this.onClose.emit({
+    this.closeNotif.emit({
       index: this.index,
       notification: this.notification
     });

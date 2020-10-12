@@ -8,15 +8,15 @@
 <!--      <svg class="notification__item__icon">-->
 <!--        <use xlink:href="assets/icons/symbol-defs.svg#icon-alert"></use>-->
 <!--      </svg>-->
-      <p class="notification__item__message">You have {{ this.grouppedNotifications.size }} unread notifications</p>
+      <p class="notification__item__message">You have {{ (this.groupedNotifications$ | async).length }} unread notifications</p>
       <button class="button notification__item__btn">
         <span class="btn__text">Show all</span>
       </button>
     </div>
   </div>
   <lib-notif
-    *ngFor="let notification of notifications; let i = index"
-    (onClose)="onMessageClose($event)"
+    *ngFor="let notification of notifications$ | async; let i = index"
+    (closeNotif)="onMessageClose($event)"
     [notification]="notification"
     [index]="i"
   ></lib-notif>

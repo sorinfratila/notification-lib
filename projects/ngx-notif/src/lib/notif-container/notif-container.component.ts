@@ -9,59 +9,57 @@ import {INotif, NgxNotifService} from '../ngx-notif.service';
   // styleUrls: ['./notif-container.component.css'],
 })
 export class NotifContainerComponent implements OnInit, OnDestroy {
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onClose: EventEmitter<any> = new EventEmitter();
-  public overflow$: Observable<boolean>;
+  @Output() closeNotif: EventEmitter<any> = new EventEmitter();
 
   messageSub: Subscription;
 
-  notifications: INotif[]; // array holding the confirmed notifications that have a built in timer
-  grouppedNotifications: Map<number, INotif>; // array holding 4 or more unconfirmed notifications with a 'show all' button
+  public overflow$: Observable<boolean>;
+  public notifications$: Observable<INotif[]>;
+  public groupedNotifications$: Observable<INotif[]>;
 
   constructor(private notifService: NgxNotifService) {
-    this.overflow$ = notifService.overflow$;
-    this.notifications = [];
-    this.grouppedNotifications = this.notifService.getGroupedNotifications();
+    this.overflow$ = this.notifService.overflow$;
+    this.notifications$ = this.notifService.notifList$;
+    this.groupedNotifications$ = this.notifService.groupedNotifList$;
   }
 
   ngOnInit(): void {
-    this.messageSub = this.notifService.getNotification$().subscribe(
-      /**
-       * processing the incoming notifications and separating them between confirmed warning notifications and
-       * confirmed/unconfirmed info notifications;
-       */
-      message => {
-        console.log('[NOTIF-CONTAINER MESSAGE]', message);
-        if (message) {
-          console.log('message', message);
-          if (message.severity === 'warning') { // message here are only warnings
-            this.notifService.setGroupedNotification(message);
-            this.grouppedNotifications = this.notifService.getGroupedNotifications();
-            if (this.grouppedNotifications.size > 3) {
-              this.notifService.setOverflow$(true);
-              this.notifications = this.notifications.filter(not => not.confirmed);
-            } else { // there are 3 or less warnings on the screen
-              this.notifications.push(message);
-            }
-          } else { // message here are of type info and are not confirmed
-            if (message.severity === 'info' && !message.confirmed) {
-              this.notifService.setGroupedNotification(message);
-              this.grouppedNotifications = this.notifService.getGroupedNotifications();
-              if (this.grouppedNotifications.size > 3) {
-                this.notifService.setOverflow$(true);
-                this.notifications = this.notifications.filter(not => not.confirmed);
-              } else { // there are 3 or less unconfirmed infos on the screen
-                this.notifications.push(message);
-              }
-            } else if (message.severity === 'neutral') { // message here are info and are confirmed, they have a timeout
-              console.log('SOMETHING');
-              this.notifications.push(message);
-              this.filterNotifications();
-            }
-          }
-        }
-      }
-    );
+    // this.messageSub = this.notifService.getNotification$().subscribe(
+    //   /**
+    //    * processing the incoming notifications and separating them between confirmed warning notifications and
+    //    * confirmed/unconfirmed info notifications;
+    //    */
+    //   message => {
+    //     console.log('[NOTIF-CONTAINER MESSAGE]', message);
+    //     if (message) {
+    //       console.log('message', message);
+    //       if (message.severity === 'warning') { // message here are only warnings
+    //         this.notifService.setGroupedNotification(message);
+    //         this.grouppedNotifications = this.notifService.getGroupedNotifications();
+    //         if (this.grouppedNotifications.size > 3) {
+    //           this.notifService.setOverflow$(true);
+    //           this.notifications = this.notifications.filter(not => not.confirmed);
+    //         } else { // there are 3 or less warnings on the screen
+    //           this.notifications.push(message);
+    //         }
+    //       } else { // message here are of type info and are not confirmed
+    //         if (message.severity === 'info' && !message.confirmed) {
+    //           this.notifService.setGroupedNotification(message);
+    //           this.grouppedNotifications = this.notifService.getGroupedNotifications();
+    //           if (this.grouppedNotifications.size > 3) {
+    //             this.notifService.setOverflow$(true);
+    //             this.notifications = this.notifications.filter(not => not.confirmed);
+    //           } else { // there are 3 or less unconfirmed infos on the screen
+    //             this.notifications.push(message);
+    //           }
+    //         } else if (message.severity === 'neutral') { // message here are info and are confirmed, they have a timeout
+    //           this.notifications.push(message);
+    //           this.filterNotifications();
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
   }
 
   ngOnDestroy(): void {
@@ -71,13 +69,13 @@ export class NotifContainerComponent implements OnInit, OnDestroy {
   /**
    * helper function that filters out the timed/confirmed notifications of type info when there are more than 3 on the screen
    */
-  filterNotifications = () => {
-    const testArray = this.notifications.filter(not => not.severity === 'info' && not.confirmed);
-    if (testArray.length > 3) {
-      const index = this.notifications.findIndex(not => not.severity === 'info' && not.confirmed);
-      this.notifications.splice(index, 1);
-    }
-  }
+  // filterNotifications = () => {
+  //   const testArray = this.notifications.filter(not => not.severity === 'info' && not.confirmed);
+  //   if (testArray.length > 3) {
+  //     const index = this.notifications.findIndex(not => not.severity === 'info' && not.confirmed);
+  //     this.notifications.splice(index, 1);
+  //   }
+  // }
 
   /**
    * function to check if the grouppedNotifications array has at least one notification of type warning
@@ -101,9 +99,9 @@ export class NotifContainerComponent implements OnInit, OnDestroy {
     if (!event.timedOut) {
       event.notification.confirmed = true;
     }
-    this.notifications.splice(event.index, 1);
+    // this.notifications.splice(event.index, 1);
 
-    this.onClose.emit({
+    this.closeNotif.emit({
       notification: event.notification
     });
   }

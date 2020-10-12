@@ -16,12 +16,9 @@ export interface INotif {
 export class NgxNotifService {
 
   static id: number;
-  // tslint:disable-next-line:variable-name
   private _overflow$ = new BehaviorSubject<boolean>(false);
-  // tslint:disable-next-line:variable-name
   private _notifList$ = new BehaviorSubject<INotif[]>([]);
-  // tslint:disable-next-line:variable-name
-  private _grouppedNotifList$ = new BehaviorSubject<INotif[]>([]);
+  private _groupedNotifList$ = new BehaviorSubject<INotif[]>([]);
   private groupedNotifications: Map<number, INotif>;
   private notifications$: Subject<INotif>;
 
@@ -39,24 +36,32 @@ export class NgxNotifService {
     return this._notifList$.asObservable();
   }
 
-  get grouppedNotifList$(): Observable<INotif[]> {
-    return this._grouppedNotifList$.asObservable();
+  get groupedNotifList$(): Observable<INotif[]> {
+    return this._groupedNotifList$.asObservable();
   }
 
   get overflow$(): Observable<boolean> {
     return this._overflow$.asObservable();
   }
 
-  public setNotifList(notif: INotif): void {
-    const notifListCopy = this._notifList$.getValue();
-    notifListCopy.push(notif);
+  public setNotifList(notifItem: (INotif[] | INotif)): void {
+    let notifListCopy = this._notifList$.getValue().slice();
+
+    if (Array.isArray(notifItem)) notifListCopy = [...notifListCopy, ...notifItem];
+
+    else notifListCopy.push(notifItem);
+
     this._notifList$.next(notifListCopy);
   }
 
-  public setGrouppedNotifList(notif: INotif): void {
-    const notifListCopy = this._grouppedNotifList$.getValue();
-    notifListCopy.push(notif);
-    this._grouppedNotifList$.next(notifListCopy);
+  public setGroupedNotifList(notifItem: (INotif[] | INotif)): void {
+    let notifListCopy = this._notifList$.getValue().slice();
+
+    if (Array.isArray(notifItem)) notifListCopy = [...notifListCopy, ...notifItem];
+
+    else notifListCopy.push(notifItem);
+
+    this._groupedNotifList$.next(notifListCopy);
   }
 
   public setOverflow$(value: boolean): void {
@@ -67,32 +72,43 @@ export class NgxNotifService {
     return this.groupedNotifications;
   }
 
-  public setGroupedNotification(notification?: INotif): void {
-    if (notification) this.groupedNotifications.set(notification.id, notification);
-    else this.groupedNotifications = new Map();
-  }
-
   public removeGroupedNotification(id: number): void {
     if (this.groupedNotifications.has(id)) this.groupedNotifications.delete(id);
   }
 
-  public getNotification$(): Observable<INotif> {
-    return this.notifications$.asObservable();
-  }
-
-  private filterNotif(message): void {
+  private filterNotif(message: INotif): void {
+    console.log('message', message);
     if (message) {
-      console.log('message', message);
       switch (message.severity) {
         case 'warning': {
-          this.setGrouppedNotifList(message);
-          if (this._grouppedNotifList$.getValue().length > 3) {
+          this.setGroupedNotifList(message);
+          if (this._groupedNotifList$.getValue().length > 3) {
+            // there are more than 3 notifs that require confirmation
             this.setOverflow$(true);
+            this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
+          } else this.setNotifList(message);
+          break;
+        }
+        case 'info': {
+          if (!message.confirmed) {
+            this.setGroupedNotifList(message);
+            if (this._groupedNotifList$.getValue().length > 3) {
+              // there are more than 3 notifs that require confirmation
+              this.setOverflow$(true);
+              this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
+            } else this.setNotifList(message); // there are 3 or less unconfirmed infos on the screen
+          } else {
+            //  message.confirmed
             this.setNotifList(message);
           }
           break;
         }
+        case 'neutral': {
+          this.setNotifList(message);
+          break;
+        }
         default: {
+          this.setNotifList(message);
           break;
         }
       }
@@ -136,7 +152,8 @@ export class NgxNotifService {
       timeout: null,
     };
 
-    this.notifications$.next(payload);
+    this.filterNotif(payload);
+    // this.notifications$.next(payload);
   }
 
   /**
@@ -152,9 +169,9 @@ export class NgxNotifService {
       timeout: data.confirmed === true ? 5000 : null
     };
 
-    console.log(payload);
+    this.filterNotif(payload);
 
-    this.notifications$.next(payload);
+    // this.notifications$.next(payload);
   }
 
   /**
@@ -170,9 +187,9 @@ export class NgxNotifService {
       timeout: 5000,
     };
 
-    console.log(payload);
+    this.filterNotif(payload);
 
-    this.notifications$.next(payload);
+    // this.notifications$.next(payload);
   }
 
 }

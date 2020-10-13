@@ -39,9 +39,13 @@ html {
 
 .notification__item {
   color: #1f1f1f;
-  padding: 0.6rem;
-  border-radius: 2px;
+  padding: 1rem 1.5rem;
+  border-radius: 0.2rem;
   margin-top: 0.5rem;
+}
+
+.notification:first-child {
+  margin-top: 0;
 }
 
 .notification__item__content {

@@ -45,23 +45,28 @@ export class NgxNotifService {
   }
 
   public setNotifList(notifItem: (INotif[] | INotif)): void {
-    let notifListCopy = this._notifList$.getValue().slice();
+    let newNotifList;
+    if (Array.isArray(notifItem)) newNotifList = [...notifItem];
 
-    if (Array.isArray(notifItem)) notifListCopy = [...notifListCopy, ...notifItem];
+    else {
+      newNotifList = this._notifList$.getValue().slice();
+      newNotifList.push(notifItem);
+    }
 
-    else notifListCopy.push(notifItem);
-
-    this._notifList$.next(notifListCopy);
+    this._notifList$.next(newNotifList);
   }
 
   public setGroupedNotifList(notifItem: (INotif[] | INotif)): void {
-    let notifListCopy = this._notifList$.getValue().slice();
+    let newGroupNotifList;
 
-    if (Array.isArray(notifItem)) notifListCopy = [...notifListCopy, ...notifItem];
+    if (Array.isArray(notifItem)) newGroupNotifList = [...notifItem];
 
-    else notifListCopy.push(notifItem);
+    else {
+      newGroupNotifList = this._groupedNotifList$.getValue().slice();
+      newGroupNotifList.push(notifItem);
+    }
 
-    this._groupedNotifList$.next(notifListCopy);
+    this._groupedNotifList$.next(newGroupNotifList);
   }
 
   public setOverflow$(value: boolean): void {
@@ -74,6 +79,12 @@ export class NgxNotifService {
 
   public removeGroupedNotification(id: number): void {
     if (this.groupedNotifications.has(id)) this.groupedNotifications.delete(id);
+  }
+
+  public removeNotification(index): void {
+    const notifListCopy = this._notifList$.getValue().slice();
+    notifListCopy.splice(index, 1);
+    this.setNotifList(notifListCopy);
   }
 
   private filterNotif(message: INotif): void {

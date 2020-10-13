@@ -2,7 +2,7 @@
   <div
     class="notification__item"
     *ngIf="overflow$ | async"
-    [ngClass]="checkForColor() ? 'notification__item__warning' : 'notification__item__info'">
+    [ngClass]="(this.groupedNotifications$ | async) | checkSeverity">
     <div class="notification__item__content">
       <img src="../../assets/icons/alert.svg" alt="">
 <!--      <svg class="notification__item__icon">-->
@@ -15,6 +15,7 @@
     </div>
   </div>
   <lib-notif
+    class="notification"
     *ngFor="let notification of notifications$ | async; let i = index"
     (closeNotif)="onMessageClose($event)"
     [notification]="notification"

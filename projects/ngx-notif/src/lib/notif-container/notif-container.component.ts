@@ -99,7 +99,7 @@ export class NotifContainerComponent implements OnInit, OnDestroy {
     if (!event.timedOut) {
       event.notification.confirmed = true;
     }
-    // this.notifications.splice(event.index, 1);
+    this.notifService.removeNotification(event.index);
 
     this.closeNotif.emit({
       notification: event.notification

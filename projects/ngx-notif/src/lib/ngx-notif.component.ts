@@ -9,14 +9,15 @@ import * as moment from 'moment';
       class="notification__item"
       [ngClass]="{
     'notification__item__info': notification.severity === 'info',
-    'notification__item__warning' : notification.severity === 'warning'
+    'notification__item__warning' : notification.severity === 'warning',
+    'notification__item__neutral': notification.severity === 'neutral'
   }"
     >
       <div class="notification__item__content">
-        <img src="../../assets/icons/info.svg" alt="">
-        <!--    <svg class="notification__item__icon">-->
-        <!--&lt;!&ndash;      <use attr.xlink:href="assets/icons/symbol-defs.svg#{{ getNotificationIcon(notification.severity) }}"></use>&ndash;&gt;-->
-        <!--    </svg>-->
+        <span class="notification__item__icon" [ngClass]="{
+            warning: notification.severity === 'warning',
+            info: notification.severity === 'info'
+        }"></span>
         <div class="notification__item__text">
           <p class="notification__item__message">{{ notification.message }}</p>
           <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="relativeTime"></p>

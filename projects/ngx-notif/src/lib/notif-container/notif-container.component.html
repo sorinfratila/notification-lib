@@ -1,19 +1,21 @@
 <div class="notification__container">
-  <div
-    class="notification__item"
-    *ngIf="overflow$ | async"
-    [ngClass]="(this.groupedNotifications$ | async) | checkSeverity">
-    <div class="notification__item__content">
-      <img src="../../assets/icons/alert.svg" alt="">
-<!--      <svg class="notification__item__icon">-->
-<!--        <use xlink:href="assets/icons/symbol-defs.svg#icon-alert"></use>-->
-<!--      </svg>-->
-      <p class="notification__item__message">You have {{ (this.groupedNotifications$ | async).length }} unread notifications</p>
-      <button class="button notification__item__btn">
-        <span class="btn__text">Show all</span>
-      </button>
+  <ng-container *ngIf="groupedNotifications$ | async as grNotif">
+    <div
+      class="notification__item"
+      *ngIf="overflow$ | async"
+      [ngClass]="grNotif | checkSeverity">
+      <div class="notification__item__content">
+<!--        <span class="notification__item__icon" [ngClass]="{-->
+<!--            'info': grNotif.find(notif => notif.severity === 'info'),-->
+<!--            'warning': grNotif.find(notif => notif.severity === 'warning')-->
+<!--          }"></span>-->
+        <p class="notification__item__message">You have {{ grNotif.length }} unread notifications</p>
+        <button class="button notification__item__btn">
+          <span class="btn__text">Show all</span>
+        </button>
+      </div>
     </div>
-  </div>
+  </ng-container>
   <lib-notif
     class="notification"
     *ngFor="let notification of notifications$ | async; let i = index"

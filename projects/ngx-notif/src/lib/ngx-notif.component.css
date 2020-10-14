@@ -9,6 +9,11 @@ html {
   font-size: 10px;
 }
 
+body {
+  height: 100vh;
+  background-color: #474747;
+}
+
 .notification__container {
   top: 10rem;
   right: 1rem;
@@ -18,7 +23,6 @@ html {
   max-width: 400px;
   z-index: 9999;
   display: block;
-  /*background-color: #0096d6;*/
 }
 
 .notification__container:first-child {
@@ -34,13 +38,13 @@ html {
 }
 
 .notification__item__warning {
-  background-color: #fff5cb;
+  background-color: #FFEB99;
 }
 
 .notification__item {
   color: #1f1f1f;
   padding: 1rem 1.5rem;
-  border-radius: 0.2rem;
+  border-radius: 0.3rem;
   margin-top: 0.5rem;
 }
 
@@ -85,6 +89,16 @@ html {
   margin-right: 1rem;
 }
 
+.warning {
+  background: url("../assets/icons/alert.svg") no-repeat center;
+}
+
+.info {
+  background: url("../assets/icons/info.svg");
+  background-size: cover;
+}
+
+
 .notification__item__btn {
   width: 8rem;
   height: 2.6rem;
@@ -115,7 +129,7 @@ button.disabled, button[disabled] {
 }
 
 svg {
-  fill: #787878;
+
 }
 
 button.main {

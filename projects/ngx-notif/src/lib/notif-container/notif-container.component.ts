@@ -6,13 +6,10 @@ import {INotif, NgxNotifService} from '../ngx-notif.service';
   // tslint:disable-next-line:component-selector
   selector: 'notif-container',
   templateUrl: './notif-container.component.html',
-  // styleUrls: ['./notif-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotifContainerComponent {
   @Output() closeNotif: EventEmitter<any> = new EventEmitter();
-
-  messageSub: Subscription;
 
   public overflow$: Observable<boolean>;
   public notifications$: Observable<INotif[]>;

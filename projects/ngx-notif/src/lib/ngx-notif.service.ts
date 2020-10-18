@@ -78,10 +78,22 @@ export class NgxNotifService {
   }
 
   public removeGroupedNotification(id: number): void {
-    if (this.groupedNotifications.has(id)) this.groupedNotifications.delete(id);
+    const notifListCopy = this._groupedNotifList$.getValue().slice();
+    const index = notifListCopy.findIndex(notif => notif.id === id);
+
+    if (index !== -1) notifListCopy.splice(index, 1);
+    if (notifListCopy.length <= 3 && this._overflow$.getValue()) this.restoreNotifList(notifListCopy);
+    else this.setGroupedNotifList(notifListCopy);
+  }
+
+  public restoreNotifList(newList: INotif[]): void {
+    this.setOverflow$(false);
+    this.setGroupedNotifList([]);
+    this.setNotifList(newList);
   }
 
   public removeNotification(index): void {
+    if (index === -1) return;
     const notifListCopy = this._notifList$.getValue().slice();
     notifListCopy.splice(index, 1);
     this.setNotifList(notifListCopy);
@@ -123,30 +135,6 @@ export class NgxNotifService {
           break;
         }
       }
-      // if (message.severity === 'warning') { // message here are only warnings
-      //   this.notifService.setGroupedNotification(message);
-      //   this.grouppedNotifications = this.notifService.getGroupedNotifications();
-      //   if (this.grouppedNotifications.size > 3) {
-      //     this.notifService.setOverflow$(true);
-      //     this.notifications = this.notifications.filter(not => not.confirmed);
-      //   } else { // there are 3 or less warnings on the screen
-      //     this.notifications.push(message);
-      //   }
-      // } else { // message here are of type info and are not confirmed
-      //   if (message.severity === 'info' && !message.confirmed) {
-      //     this.notifService.setGroupedNotification(message);
-      //     this.grouppedNotifications = this.notifService.getGroupedNotifications();
-      //     if (this.grouppedNotifications.size > 3) {
-      //       this.notifService.setOverflow$(true);
-      //       this.notifications = this.notifications.filter(not => not.confirmed);
-      //     } else { // there are 3 or less unconfirmed infos on the screen
-      //       this.notifications.push(message);
-      //     }
-      //   } else if (message.severity !== 'neutral') { // message here are info and are confirmed, they have a timeout
-      //     this.notifications.push(message);
-      //     this.filterNotifications();
-    //     }
-    //   }
     }
   }
 
@@ -164,7 +152,6 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
-    // this.notifications$.next(payload);
   }
 
   /**
@@ -181,8 +168,6 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
-
-    // this.notifications$.next(payload);
   }
 
   /**
@@ -199,8 +184,6 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
-
-    // this.notifications$.next(payload);
   }
 
 }

@@ -5,14 +5,18 @@
       *ngIf="overflow$ | async"
       [ngClass]="grNotif | checkSeverity">
       <div class="notification__item__content">
-<!--        <span class="notification__item__icon" [ngClass]="{-->
-<!--            'info': grNotif.find(notif => notif.severity === 'info'),-->
-<!--            'warning': grNotif.find(notif => notif.severity === 'warning')-->
-<!--          }"></span>-->
+        <i class="material-icons-outlined medium margin__right">{{ (grNotif | checkSeverity) === 'warning' ? 'report_problem': 'info' }}</i>
         <p class="notification__item__message">You have {{ grNotif.length }} unread notifications</p>
-        <button class="button notification__item__btn">
-          <span class="btn__text">Show all</span>
-        </button>
+        <button class="button notification__item__btn" (click)="toggleList()">Show all</button>
+      </div>
+      <div class="dropdown" [class.show]="showList">
+        <lib-notif
+          class="notification"
+          *ngFor="let notification of grNotif; let i = index"
+          (closeNotif)="onGroupNotifMessageClose($event)"
+          [notification]="notification"
+          [index]="i"
+        ></lib-notif>
       </div>
     </div>
   </ng-container>

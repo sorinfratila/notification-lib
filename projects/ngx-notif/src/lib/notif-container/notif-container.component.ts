@@ -14,11 +14,13 @@ export class NotifContainerComponent {
   public overflow$: Observable<boolean>;
   public notifications$: Observable<INotif[]>;
   public groupedNotifications$: Observable<INotif[]>;
+  public showList: boolean;
 
   constructor(private notifService: NgxNotifService) {
     this.overflow$ = this.notifService.overflow$;
     this.notifications$ = this.notifService.notifList$;
     this.groupedNotifications$ = this.notifService.groupedNotifList$;
+    this.showList = false;
   }
 
   /**
@@ -29,15 +31,25 @@ export class NotifContainerComponent {
    * and whether the notification timed out
    */
   onMessageClose(event: any): void {
+    if (!event.timedOut) event.notification.confirmed = true;
+
+    this.notifService.removeNotification(event.index);
+
+    // this.closeNotif.emit({
+    //   notification: event.notification
+    // });
+  }
+
+  onGroupNotifMessageClose(event: any): void {
     if (!event.timedOut) {
       event.notification.confirmed = true;
     }
-    this.notifService.removeNotification(event.index);
 
-    this.closeNotif.emit({
-      notification: event.notification
-    });
+    this.notifService.removeGroupedNotification(event.index);
   }
 
+  public toggleList(): void {
+    this.showList = !this.showList;
+  }
 
 }

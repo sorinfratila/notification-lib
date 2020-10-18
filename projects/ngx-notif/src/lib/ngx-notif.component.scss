@@ -46,6 +46,32 @@ body {
   padding: 1rem 1.5rem;
   border-radius: 0.3rem;
   margin-top: 0.5rem;
+  position: relative;
+
+  .dropdown {
+    max-height: 0px;
+    overflow: hidden;
+
+    transition: max-height .25s ease-in-out;
+
+    &.show {
+      max-height: 250px;
+      overflow: auto;
+    }
+
+  }
+
+  &.warning {
+    background-color: #FFEB99;
+  }
+
+  &.info {
+    background-color: #99d5ee;
+  }
+
+  &.neutral {
+    background-color: #d5d5d5;
+  }
 }
 
 .notification:first-child {
@@ -82,22 +108,29 @@ body {
   line-height: 1.1;
 }
 
+.material-icons-outlined {
+  &.small {
+    font-size: 18px;
+  }
+
+  &.medium {
+    font-size: 30px;
+  }
+
+  &.large {
+    font-size: 36px;
+  }
+
+  &.margin__right {
+    margin-right: 1rem;
+  }
+}
+
 .notification__item__icon {
   width: 2.6rem;
   height: 2.6rem;
   padding: 0;
-  margin-right: 1rem;
 }
-
-.warning {
-  background: url("../assets/icons/alert.svg") no-repeat center;
-}
-
-.info {
-  background: url("../assets/icons/info.svg");
-  background-size: cover;
-}
-
 
 .notification__item__btn {
   width: 8rem;
@@ -109,62 +142,23 @@ body {
   line-height: 1.1;
 }
 
-.btn__text {
-  font-size: 1.2rem;
-  vertical-align: center;
-}
-
 button {
-  padding: 4px 10px;
   cursor: pointer;
   border: 0;
   border-radius: 2px;
   margin: 0 5px;
-}
-
-button.disabled, button[disabled] {
-  background-color: #474747 !important;
-  color: #787878;
-  cursor: default;
-}
-
-svg {
-
-}
-
-button.main {
-   background-color: #0096d6;
-}
-
-button:hover {
-   background-color: #3d6275;
-}
-
-button:active,
-button.selected {
-   background-color: #3d4c54;
-}
-
-.button {
   background-color: #585a5c;
   padding: 0.3rem 1rem;
   color: #e6e6e6;
-}
+  font-size: 1.2rem;
 
-.button.hide {
-   display: none;
- }
+  &:hover {
+    background-color: #787A7D;
+  }
 
-span,
-p {
-  font-size: 1.4rem;
-}
+  &:active, {
+    background-color: #3C3D3E;
+  }
 
-.button:hover {
-   background-color: #4a758b;
-}
-
-.button:active {
-   background-color: #3d4c54;
 }
 

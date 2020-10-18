@@ -5,19 +5,9 @@ import * as moment from 'moment';
 @Component({
   selector: 'lib-notif',
   template: `
-    <div
-      class="notification__item"
-      [ngClass]="{
-    'notification__item__info': notification.severity === 'info',
-    'notification__item__warning' : notification.severity === 'warning',
-    'notification__item__neutral': notification.severity === 'neutral'
-  }"
-    >
+    <div class="notification__item {{ notification.severity }} large">
       <div class="notification__item__content">
-        <span class="notification__item__icon" [ngClass]="{
-            warning: notification.severity === 'warning',
-            info: notification.severity === 'info'
-        }"></span>
+        <i class="material-icons-outlined medium margin__right">{{ notification.severity === 'warning' ? 'report_problem' : 'info' }}</i>
         <div class="notification__item__text">
           <p class="notification__item__message">{{ notification.message }}</p>
           <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="relativeTime"></p>
@@ -33,9 +23,9 @@ import * as moment from 'moment';
     </div>
 
   `,
-  styleUrls: ['./ngx-notif.component.css'
+  styleUrls: ['./ngx-notif.component.scss'
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() notification: INotif;

@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   showWarning(): void {
     this.notifService.warning({
-      message: 'WARNING! ' + Math.ceil(Math.random() * 100),
+      message: 'WARNING! This is a longer message that I have not thought about for a long time' + Math.ceil(Math.random() * 100),
     });
   }
 
@@ -28,14 +28,14 @@ export class HomeComponent implements OnInit {
 
   showInfo(): void {
     this.notifService.info({
-      message: 'INFO! ' + Math.ceil(Math.random() * 100),
+      message: 'INFO! This is a longer message that I have not thought about for a long time, but I am just writing here a long long message that poroba make4s no sense' + Math.ceil(Math.random() * 100),
       confirmed: true
     });
   }
 
   showInfoOK(): void {
     this.notifService.info({
-      message: 'INFO_OK! ' + Math.ceil(Math.random() * 100),
+      message: 'INFO_OK! This is a longer message that I have not thought about for a long time,' + Math.ceil(Math.random() * 100),
       confirmed: false,
     });
   }

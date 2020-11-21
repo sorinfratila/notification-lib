@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NgxNotifService } from './ngx-notif.service';
+import { NgxNotifService } from '../../ngx-notif.service';
 
 describe('NgxNotifService', () => {
   let service: NgxNotifService;

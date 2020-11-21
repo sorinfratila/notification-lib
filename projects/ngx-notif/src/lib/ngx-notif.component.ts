@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
-import * as moment from 'moment';
+import {INotif, NgxNotifService} from './ngx-notif.service';
 
 const options = {
   minute: 'numeric',
@@ -69,7 +68,6 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   initTimeout(): void {
     if (this.notification.confirmed) {
       this.timeout = setTimeout(() => {
-        // console.warn('timeout passed');
         this.closeNotif.emit({
           index: this.index,
           notification: this.notification,

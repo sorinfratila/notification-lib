@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Notification} from '../../model/Notification.class';
-import {NotifSpawnService} from '../notif-spawn/notif-spawn.service';
+import {Notification} from './model/Notification.class';
+import {NotifSpawnService} from './services/notif-spawn/notif-spawn.service';
+import {NotificationList} from './model/NotificationList.class';
 
 export type severityEnum = 'warning' | 'info' | 'error' | 'neutral';
 
@@ -25,7 +26,19 @@ export class NgxNotifService {
 
   private testNotifList: Notification[] = [];
 
+  /**
+   * TESTING NEW ARCHITECTURE
+   */
+
+  private _notificationListsMap: Map<number, NotificationList>;
+
+
+  /**
+   * END
+   */
+
   constructor(private spawn: NotifSpawnService) {
+    this._notificationListsMap = new Map<number, NotificationList>();
     NgxNotifService.id = 1;
     this.notifications$ = new Subject<INotif>();
   }

@@ -1,7 +1,7 @@
 export class Notification {
   private static id = 1;
 
-  private id: number;
+  private readonly localId: number;
   public severity: severityEnum;
   public message: string;
   public createdAt: Date;
@@ -9,7 +9,7 @@ export class Notification {
   public timeout: number;
 
   constructor(data: any) {
-    this.id = Notification.id++;
+    this.localId = Notification.id++;
 
     const { severity, timeout, confirmed, message } = data;
 
@@ -21,7 +21,7 @@ export class Notification {
   }
 
   public getId(): number {
-    return Notification.id;
+    return this.localId;
   }
 }
 

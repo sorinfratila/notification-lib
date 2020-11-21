@@ -1,6 +1,11 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {INotif, NgxNotifService} from './ngx-notif.service';
+import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
 import * as moment from 'moment';
+
+const options = {
+  minute: 'numeric',
+  hour: 'numeric',
+};
 
 @Component({
   selector: 'lib-notif',
@@ -10,7 +15,7 @@ import * as moment from 'moment';
         <i class="material-icons-outlined medium margin__right">{{ notification.severity === 'warning' ? 'report_problem' : 'info' }}</i>
         <div class="notification__item__text">
           <p class="notification__item__message">{{ notification.message }}</p>
-          <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="relativeTime"></p>
+          <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="now"></p>
         </div>
         <button
           class="button notification__item__btn"
@@ -30,17 +35,15 @@ import * as moment from 'moment';
 export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() notification: INotif;
   @Input() index: number;
-
   @Output() closeNotif: EventEmitter<any> = new EventEmitter();
 
   timeout: any;
-  relativeTime: string; // used to keep time of unconfirmed notifications
+  now: string; // used to keep time of unconfirmed notifications
 
   constructor(private notifService: NgxNotifService) { }
 
   ngOnInit(): void {
-    this.relativeTime = moment(this.notification.createdAt).fromNow();
-    this.timeElapsed();
+    this.now = new Date().toLocaleDateString('en-UK', options).slice(-5);
   }
 
   ngAfterViewInit(): void {
@@ -54,11 +57,11 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Method used to start a timer that is shown on the unconfirmed notifications
    */
-  timeElapsed(): void {
-    setInterval(() => {
-      this.relativeTime = moment(this.notification.createdAt).fromNow();
-    }, 60000);
-  }
+  // timeElapsed(): void {
+  //   setInterval(() => {
+  //     this.relativeTime = moment(this.notification.createdAt).fromNow();
+  //   }, 60000);
+  // }
 
   /**
    * Method used for initializing notification timeout if the notifications has a timeout

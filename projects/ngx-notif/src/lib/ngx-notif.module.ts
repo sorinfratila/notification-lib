@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { NgxNotifComponent } from './ngx-notif.component';
+import { NgxNotifComponent } from './notif-item/ngx-notif.component';
 import { NotifContainerComponent } from './notif-container/notif-container.component';
 import { CommonModule } from '@angular/common';
-import { NgxNotifService } from './ngx-notif.service';
-import { CheckSeverityPipe } from './check-severity.pipe';
-import { GetIconPipe } from './get-icon.pipe';
+import { NgxNotifService } from './services/notif/ngx-notif.service';
+import { CheckSeverityPipe } from './pipes/check-severity.pipe';
+import { GetIconPipe } from './pipes/get-icon.pipe';
 
 
 @NgModule({

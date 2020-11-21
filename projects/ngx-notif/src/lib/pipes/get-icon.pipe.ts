@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {INotif} from './ngx-notif.service';
+import {INotif} from '../services/notif/ngx-notif.service';
 
 @Pipe({
   name: 'getIcon'

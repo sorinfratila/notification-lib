@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Notification} from '../../model/Notification.class';
+import {NotifSpawnService} from '../notif-spawn/notif-spawn.service';
 
 export type severityEnum = 'warning' | 'info' | 'error' | 'neutral';
 
@@ -16,16 +18,16 @@ export interface INotif {
 export class NgxNotifService {
 
   static id: number;
-  private _overflow$ = new BehaviorSubject<boolean>(false);
   private _notifList$ = new BehaviorSubject<INotif[]>([]);
   private _groupedNotifList$ = new BehaviorSubject<INotif[]>([]);
-  private groupedNotifications: Map<number, INotif>;
   private notifications$: Subject<INotif>;
+  private _overflow = false;
 
-  constructor() {
+  private testNotifList: Notification[] = [];
+
+  constructor(private spawn: NotifSpawnService) {
     NgxNotifService.id = 1;
     this.notifications$ = new Subject<INotif>();
-    this.groupedNotifications = new Map();
   }
 
   get id(): number {
@@ -40,16 +42,12 @@ export class NgxNotifService {
     return this._groupedNotifList$.asObservable();
   }
 
-  get overflow$(): Observable<boolean> {
-    return this._overflow$.asObservable();
-  }
-
   public setNotifList(notifItem: (INotif[] | INotif)): void {
     let newNotifList;
     if (Array.isArray(notifItem)) newNotifList = [...notifItem];
 
     else {
-      newNotifList = this._notifList$.getValue().slice();
+      newNotifList = [...this._notifList$.getValue()];
       newNotifList.push(notifItem);
     }
 
@@ -66,28 +64,22 @@ export class NgxNotifService {
       newGroupNotifList.push(notifItem);
     }
 
+    if (newGroupNotifList.length > 3) this._overflow = true;
+
     this._groupedNotifList$.next(newGroupNotifList);
   }
 
-  public setOverflow$(value: boolean): void {
-    this._overflow$.next(value);
-  }
-
-  public getGroupedNotifications(): Map<number, INotif> {
-    return this.groupedNotifications;
-  }
-
   public removeGroupedNotification(id: number): void {
-    const notifListCopy = this._groupedNotifList$.getValue().slice();
+    const notifListCopy = [...this._groupedNotifList$.getValue()];
     const index = notifListCopy.findIndex(notif => notif.id === id);
 
     if (index !== -1) notifListCopy.splice(index, 1);
-    if (notifListCopy.length <= 3 && this._overflow$.getValue()) this.restoreNotifList(notifListCopy);
+    if (notifListCopy.length < 3) this._overflow = false;
+    if (notifListCopy.length <= 3 && this._overflow) this.restoreNotifList(notifListCopy);
     else this.setGroupedNotifList(notifListCopy);
   }
 
   public restoreNotifList(newList: INotif[]): void {
-    this.setOverflow$(false);
     this.setGroupedNotifList([]);
     this.setNotifList(newList);
   }
@@ -100,14 +92,11 @@ export class NgxNotifService {
   }
 
   private filterNotif(message: INotif): void {
-    console.log('message', message);
     if (message) {
       switch (message.severity) {
         case 'warning': {
           this.setGroupedNotifList(message);
           if (this._groupedNotifList$.getValue().length > 3) {
-            // there are more than 3 notifs that require confirmation
-            this.setOverflow$(true);
             this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
           } else this.setNotifList(message);
           break;
@@ -116,8 +105,6 @@ export class NgxNotifService {
           if (!message.confirmed) {
             this.setGroupedNotifList(message);
             if (this._groupedNotifList$.getValue().length > 3) {
-              // there are more than 3 notifs that require confirmation
-              this.setOverflow$(true);
               this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
             } else this.setNotifList(message); // there are 3 or less unconfirmed infos on the screen
           } else {
@@ -152,6 +139,9 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
+
+    this.testNotifList.push(new Notification(payload));
+    console.log(this.testNotifList);
   }
 
   /**
@@ -168,6 +158,9 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
+
+    this.testNotifList.push(new Notification(payload));
+    console.log(this.testNotifList);
   }
 
   /**
@@ -184,6 +177,9 @@ export class NgxNotifService {
     };
 
     this.filterNotif(payload);
+
+    this.testNotifList.push(new Notification(payload));
+    console.log(this.testNotifList);
   }
 
 }

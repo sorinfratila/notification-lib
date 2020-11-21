@@ -2,12 +2,12 @@
   <ng-container *ngIf="groupedNotifications$ | async as grNotif">
     <div
       class="notification__item"
-      *ngIf="overflow$ | async"
+      *ngIf="grNotif.length > 3"
       [ngClass]="grNotif | checkSeverity">
       <div class="notification__item__content">
         <i class="material-icons-outlined medium margin__right">{{ (grNotif | checkSeverity) === 'warning' ? 'report_problem': 'info' }}</i>
         <p class="notification__item__message">You have {{ grNotif.length }} unread notifications</p>
-        <button class="button notification__item__btn" (click)="toggleList()">Show all</button>
+        <button class="button notification__item__btn" (click)="toggleList()">{{ showList ? 'Hide': 'Show' }}</button>
       </div>
       <div class="dropdown" [class.show]="showList">
         <lib-notif

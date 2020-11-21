@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
-import {INotif, NgxNotifService} from '../ngx-notif.service';
+import {Observable} from 'rxjs';
+import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -11,13 +11,13 @@ import {INotif, NgxNotifService} from '../ngx-notif.service';
 export class NotifContainerComponent {
   @Output() closeNotif: EventEmitter<any> = new EventEmitter();
 
-  public overflow$: Observable<boolean>;
+  // public overflow$: Observable<boolean>;
   public notifications$: Observable<INotif[]>;
   public groupedNotifications$: Observable<INotif[]>;
   public showList: boolean;
 
   constructor(private notifService: NgxNotifService) {
-    this.overflow$ = this.notifService.overflow$;
+    // this.overflow$ = this.notifService.overflow$;
     this.notifications$ = this.notifService.notifList$;
     this.groupedNotifications$ = this.notifService.groupedNotifList$;
     this.showList = false;

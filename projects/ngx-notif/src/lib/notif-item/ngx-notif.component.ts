@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {INotif, NgxNotifService} from './ngx-notif.service';
+import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
 
 const options = {
   minute: 'numeric',

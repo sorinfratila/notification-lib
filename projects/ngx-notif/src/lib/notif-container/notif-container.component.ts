@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 import {Observable} from 'rxjs';
-import {INotif, NgxNotifService} from '../ngx-notif.service';
+import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
 
 @Component({
   // tslint:disable-next-line:component-selector

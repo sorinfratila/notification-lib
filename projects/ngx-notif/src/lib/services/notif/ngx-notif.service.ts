@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Notification} from './model/Notification.class';
-import {NotifSpawnService} from './services/notif-spawn/notif-spawn.service';
-import {NotificationList} from './model/NotificationList.class';
+import {Notification} from '../../model/Notification.class';
+import {NotifSpawnService} from '../notif-spawn/notif-spawn.service';
+import {NotificationList} from '../../model/NotificationList.class';
 
 export type severityEnum = 'warning' | 'info' | 'error' | 'neutral';
 

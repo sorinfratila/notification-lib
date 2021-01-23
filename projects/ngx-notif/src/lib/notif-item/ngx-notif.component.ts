@@ -1,5 +1,14 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {INotif, NgxNotifService} from '../services/notif/ngx-notif.service';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { INotif, NgxNotifService } from '../services/notif/ngx-notif.service';
 
 const options = {
   minute: 'numeric',
@@ -8,27 +17,8 @@ const options = {
 
 @Component({
   selector: 'lib-notif',
-  template: `
-    <div class="notification__item {{ notification.severity }} large">
-      <div class="notification__item__content">
-        <i class="material-icons-outlined medium margin__right">{{ notification.severity === 'warning' ? 'report_problem' : 'info' }}</i>
-        <div class="notification__item__text">
-          <p class="notification__item__message">{{ notification.message }}</p>
-          <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="now"></p>
-        </div>
-        <button
-          class="button notification__item__btn"
-          (click)="onOKClick($event)"
-          *ngIf="!notification.confirmed"
-        >
-          <span class="btn__text">OK</span>
-        </button>
-      </div>
-    </div>
-
-  `,
-  styleUrls: ['./ngx-notif.component.scss'
-  ],
+  templateUrl: './ngx-notif.component.html',
+  styleUrls: ['./ngx-notif.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -39,7 +29,7 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   timeout: any;
   now: string; // used to keep time of unconfirmed notifications
 
-  constructor(private notifService: NgxNotifService) { }
+  constructor(private notifService: NgxNotifService) {}
 
   ngOnInit(): void {
     this.now = new Date().toLocaleDateString('en-UK', options).slice(-5);
@@ -52,15 +42,6 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.clearTimeout();
   }
-
-  /**
-   * Method used to start a timer that is shown on the unconfirmed notifications
-   */
-  // timeElapsed(): void {
-  //   setInterval(() => {
-  //     this.relativeTime = moment(this.notification.createdAt).fromNow();
-  //   }, 60000);
-  // }
 
   /**
    * Method used for initializing notification timeout if the notifications has a timeout
@@ -94,7 +75,7 @@ export class NgxNotifComponent implements OnInit, AfterViewInit, OnDestroy {
     this.notifService.removeGroupedNotification(this.notification.id);
     this.closeNotif.emit({
       index: this.index,
-      notification: this.notification
+      notification: this.notification,
     });
 
     event.preventDefault();

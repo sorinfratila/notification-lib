@@ -5,20 +5,18 @@ import { CommonModule } from '@angular/common';
 import { NgxNotifService } from './services/notif/ngx-notif.service';
 import { CheckSeverityPipe } from './pipes/check-severity.pipe';
 import { GetIconPipe } from './pipes/get-icon.pipe';
-
+import { NotifSpawnService } from './services/notif-spawn/notif-spawn.service';
 
 @NgModule({
   declarations: [NgxNotifComponent, NotifContainerComponent, CheckSeverityPipe, GetIconPipe],
-  imports: [
-    CommonModule
-  ],
-  exports: [NgxNotifComponent, NotifContainerComponent]
+  imports: [CommonModule],
+  exports: [NgxNotifComponent, NotifContainerComponent],
 })
 export class NgxNotifModule {
   static forRoot() {
     return {
       ngModule: NgxNotifModule,
-      providers: [NgxNotifService]
+      providers: [NgxNotifService, NotifSpawnService],
     };
   }
 }

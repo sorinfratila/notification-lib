@@ -1,0 +1,16 @@
+<div class="notification__item {{ notification.severity }} large">
+  <div class="notification__item__content">
+    <i class="material-icons-outlined medium margin__right">{{ notification.severity === 'warning' ? 'report_problem' : 'info' }}</i>
+    <div class="notification__item__text">
+      <p class="notification__item__message">{{ notification.message }}</p>
+      <p class="notification__item__date" *ngIf="!notification.confirmed" [innerText]="now"></p>
+    </div>
+    <button
+      class="button notification__item__btn"
+      (click)="onOKClick($event)"
+      *ngIf="!notification.confirmed"
+    >
+      <span class="btn__text">OK</span>
+    </button>
+  </div>
+</div>

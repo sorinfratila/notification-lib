@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Notification} from '../../model/Notification.class';
-import {NotifSpawnService} from '../notif-spawn/notif-spawn.service';
-import {NotificationList} from '../../model/NotificationList.class';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Notification } from '../../model/Notification.class';
+import { NotifSpawnService } from '../notif-spawn/notif-spawn.service';
+import { NotificationList } from '../../model/NotificationList.class';
 
 export type severityEnum = 'warning' | 'info' | 'error' | 'neutral';
 
@@ -17,8 +17,7 @@ export interface INotif {
 
 @Injectable()
 export class NgxNotifService {
-
-  static id: number;
+  public static id = 1;
   private _notifList$ = new BehaviorSubject<INotif[]>([]);
   private _groupedNotifList$ = new BehaviorSubject<INotif[]>([]);
   private notifications$: Subject<INotif>;
@@ -32,14 +31,12 @@ export class NgxNotifService {
 
   private _notificationListsMap: Map<number, NotificationList>;
 
-
   /**
    * END
    */
 
   constructor(private spawn: NotifSpawnService) {
     this._notificationListsMap = new Map<number, NotificationList>();
-    NgxNotifService.id = 1;
     this.notifications$ = new Subject<INotif>();
   }
 
@@ -55,10 +52,9 @@ export class NgxNotifService {
     return this._groupedNotifList$.asObservable();
   }
 
-  public setNotifList(notifItem: (INotif[] | INotif)): void {
+  public setNotifList(notifItem: INotif[] | INotif): void {
     let newNotifList;
     if (Array.isArray(notifItem)) newNotifList = [...notifItem];
-
     else {
       newNotifList = [...this._notifList$.getValue()];
       newNotifList.push(notifItem);
@@ -67,11 +63,10 @@ export class NgxNotifService {
     this._notifList$.next(newNotifList);
   }
 
-  public setGroupedNotifList(notifItem: (INotif[] | INotif)): void {
+  public setGroupedNotifList(notifItem: INotif[] | INotif): void {
     let newGroupNotifList;
 
     if (Array.isArray(notifItem)) newGroupNotifList = [...notifItem];
-
     else {
       newGroupNotifList = this._groupedNotifList$.getValue().slice();
       newGroupNotifList.push(notifItem);
@@ -84,7 +79,7 @@ export class NgxNotifService {
 
   public removeGroupedNotification(id: number): void {
     const notifListCopy = [...this._groupedNotifList$.getValue()];
-    const index = notifListCopy.findIndex(notif => notif.id === id);
+    const index = notifListCopy.findIndex((notif) => notif.id === id);
 
     if (index !== -1) notifListCopy.splice(index, 1);
     if (notifListCopy.length < 3) this._overflow = false;
@@ -110,7 +105,7 @@ export class NgxNotifService {
         case 'warning': {
           this.setGroupedNotifList(message);
           if (this._groupedNotifList$.getValue().length > 3) {
-            this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
+            this.setNotifList(this._notifList$.getValue().filter((not) => not.confirmed));
           } else this.setNotifList(message);
           break;
         }
@@ -118,7 +113,7 @@ export class NgxNotifService {
           if (!message.confirmed) {
             this.setGroupedNotifList(message);
             if (this._groupedNotifList$.getValue().length > 3) {
-              this.setNotifList(this._notifList$.getValue().filter(not => not.confirmed));
+              this.setNotifList(this._notifList$.getValue().filter((not) => not.confirmed));
             } else this.setNotifList(message); // there are 3 or less unconfirmed infos on the screen
           } else {
             //  message.confirmed
@@ -167,13 +162,13 @@ export class NgxNotifService {
       message: data.message ?? 'This is an info notification',
       createdAt: new Date(),
       confirmed: data.confirmed,
-      timeout: data.confirmed === true ? 5000 : null
+      timeout: data.confirmed === true ? 5000 : null,
     };
 
     this.filterNotif(payload);
 
     this.testNotifList.push(new Notification(payload));
-    console.log(this.testNotifList);
+    console.log('this.testNotifListthis.testNotifList', this.testNotifList);
   }
 
   /**
@@ -194,5 +189,4 @@ export class NgxNotifService {
     this.testNotifList.push(new Notification(payload));
     console.log(this.testNotifList);
   }
-
 }

@@ -18,9 +18,13 @@ export interface INotif {
 @Injectable()
 export class NgxNotifService {
   public static id = 1;
+
+  // notifList$ is meant for individual notifications, non-persistent that are not grouped together
   private _notifList$ = new BehaviorSubject<INotif[]>([]);
+
+  // _groupedNotifList$ is meant for the lists of grouped persistent notifications by severity
   private _groupedNotifList$ = new BehaviorSubject<INotif[]>([]);
-  private notifications$: Subject<INotif>;
+  // private notifications$: Subject<INotif>;
   private _overflow = false;
 
   private testNotifList: Notification[] = [];
@@ -29,15 +33,15 @@ export class NgxNotifService {
    * TESTING NEW ARCHITECTURE
    */
 
-  private _notificationListsMap: Map<number, NotificationList>;
+  private _notificationListsMap: Map<string, NotificationList>;
 
   /**
    * END
    */
 
   constructor(private spawn: NotifSpawnService) {
-    this._notificationListsMap = new Map<number, NotificationList>();
-    this.notifications$ = new Subject<INotif>();
+    this._notificationListsMap = new Map<string, NotificationList>();
+    // this.notifications$ = new Subject<INotif>();
   }
 
   get id(): number {
@@ -150,6 +154,10 @@ export class NgxNotifService {
 
     this.testNotifList.push(new Notification(payload));
     console.log(this.testNotifList);
+  }
+
+  public checkIfListExists(severity: string): boolean {
+    return this._notificationListsMap.has(severity);
   }
 
   /**
